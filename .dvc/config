@@ -1,0 +1,5 @@
+[core]
+    remote = labstore
+[remote "labstore"]
+    url = s3://luuquanglinh-dvc-bucket/dvc
+    region = eu-north-1

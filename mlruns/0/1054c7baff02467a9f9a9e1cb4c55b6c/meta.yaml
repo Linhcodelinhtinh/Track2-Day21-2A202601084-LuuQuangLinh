@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/Admin/.vscode/Track2-Day21-2A202601084-LuuQuangLinh/mlruns/0/1054c7baff02467a9f9a9e1cb4c55b6c/artifacts
+end_time: 1787300095096
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 1054c7baff02467a9f9a9e1cb4c55b6c
+run_name: mercurial-donkey-40
+run_uuid: 1054c7baff02467a9f9a9e1cb4c55b6c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1787300091199
+status: 3
+tags: []
+user_id: Admin
