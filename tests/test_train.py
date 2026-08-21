@@ -2,6 +2,7 @@ import os
 import json
 import numpy as np
 import pandas as pd
+import mlflow
 from src.train import train
 
 
@@ -18,6 +19,9 @@ def _make_temp_data(tmp_path):
     pytest cung cap `tmp_path` la mot thu muc tam thoi, tu dong xoa sau khi test ket thuc.
     Ham nay dung du lieu ngau nhien nen khong can ket noi cloud storage hay tai file CSV thuc.
     """
+    test_db = str(tmp_path / "test_mlflow.db")
+    mlflow.set_tracking_uri(f"sqlite:///{test_db}")
+
     rng = np.random.default_rng(0)
     n = 200
 
