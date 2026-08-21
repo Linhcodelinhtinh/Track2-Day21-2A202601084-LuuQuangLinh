@@ -5,7 +5,7 @@ import yaml
 import json
 import joblib
 import os
-from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score
 
 # Nguong chat luong cua lab nay la f1_score, KHONG phai accuracy.
@@ -23,7 +23,7 @@ def train(
     Huan luyen mo hinh va ghi nhan ket qua vao MLflow.
 
     Tham so:
-        params     : dict chua cac sieu tham so cho GradientBoostingClassifier.
+        params     : dict chua cac sieu tham so cho RandomForestClassifier.
         data_path  : duong dan den file du lieu huan luyen.
         eval_path  : duong dan den file du lieu danh gia (holdout).
 
@@ -58,8 +58,9 @@ def train(
         # Ghi nhan cac sieu tham so
         mlflow.log_params(params)
 
-        # Khoi tao va huan luyen GradientBoostingClassifier
-        model = GradientBoostingClassifier(**params, random_state=42)
+        # Khoi tao va huan luyen RandomForestClassifier
+        rf_params = {k: v for k, v in params.items() if k != "learning_rate"}
+        model = RandomForestClassifier(**rf_params, random_state=42)
         model.fit(X_train, y_train)
 
         # Du doan tren tap holdout va tinh chi so
