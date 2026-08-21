@@ -145,5 +145,5 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             sudo systemctl restart income-api
-            sleep 15
+            sleep 5
             curl -sf http://localhost:8080/healthz && echo "Health check passed." || exit 1
