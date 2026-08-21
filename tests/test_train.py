@@ -1,8 +1,10 @@
 import os
 import json
+import pytest
 import numpy as np
 import pandas as pd
 import mlflow
+from pathlib import Path
 from src.train import train
 
 
@@ -12,6 +14,16 @@ FEATURE_NAMES = [
 ]
 
 
+@pytest.fixture(autouse=True)
+def cleanup_mlflow():
+    """Ensure any active MLflow run is ended before and after each test."""
+    if mlflow.active_run():
+        mlflow.end_run()
+    yield
+    if mlflow.active_run():
+        mlflow.end_run()
+
+
 def _make_temp_data(tmp_path):
     """
     Tao dataset nho voi cung schema Adult de su dung trong test.
@@ -19,9 +31,13 @@ def _make_temp_data(tmp_path):
     pytest cung cap `tmp_path` la mot thu muc tam thoi, tu dong xoa sau khi test ket thuc.
     Ham nay dung du lieu ngau nhien nen khong can ket noi cloud storage hay tai file CSV thuc.
     """
-    test_db = str(tmp_path / "test_mlflow.db")
+    test_db = tmp_path / "test_mlflow.db"
+    artifact_dir = tmp_path / "mlartifacts"
+    artifact_dir.mkdir(exist_ok=True)
+
     os.environ["MLFLOW_TRACKING_URI"] = f"sqlite:///{test_db}"
     os.environ["MLFLOW_EXPERIMENT_NAME"] = f"test_{tmp_path.name}"
+    os.environ["MLFLOW_ARTIFACT_ROOT"] = artifact_dir.as_uri()
 
     rng = np.random.default_rng(0)
     n = 200

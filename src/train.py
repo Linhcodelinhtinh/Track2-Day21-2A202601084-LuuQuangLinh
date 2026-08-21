@@ -46,9 +46,10 @@ def train(
     mlflow.set_tracking_uri(tracking_uri)
 
     exp_name = os.getenv("MLFLOW_EXPERIMENT_NAME", "Income_Model")
+    artifact_root = os.getenv("MLFLOW_ARTIFACT_ROOT", "./mlartifacts")
     exp = mlflow.get_experiment_by_name(exp_name)
     if exp is None:
-        exp_id = mlflow.create_experiment(exp_name, artifact_location="./mlartifacts")
+        exp_id = mlflow.create_experiment(exp_name, artifact_location=artifact_root)
     else:
         exp_id = exp.experiment_id
     mlflow.set_experiment(experiment_id=exp_id)
