@@ -7,6 +7,8 @@ on:
       - 'data/**.dvc'
       - 'src/**.py'
       - 'params.yaml'
+      - 'requirements.txt'
+      - '.github/workflows/cicd.yml'
   workflow_dispatch:
 
 jobs:
