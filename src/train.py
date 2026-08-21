@@ -41,6 +41,18 @@ def train(
     X_eval = df_eval.drop(columns=["target"])
     y_eval = df_eval["target"]
 
+    # Cau hinh MLflow tracking URI va experiment name tuong minh
+    tracking_uri = os.getenv("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db")
+    mlflow.set_tracking_uri(tracking_uri)
+
+    exp_name = os.getenv("MLFLOW_EXPERIMENT_NAME", "Income_Model")
+    exp = mlflow.get_experiment_by_name(exp_name)
+    if exp is None:
+        exp_id = mlflow.create_experiment(exp_name, artifact_location="./mlartifacts")
+    else:
+        exp_id = exp.experiment_id
+    mlflow.set_experiment(experiment_id=exp_id)
+
     with mlflow.start_run():
         # Ghi nhan cac sieu tham so
         mlflow.log_params(params)

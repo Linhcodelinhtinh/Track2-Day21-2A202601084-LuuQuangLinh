@@ -20,7 +20,8 @@ def _make_temp_data(tmp_path):
     Ham nay dung du lieu ngau nhien nen khong can ket noi cloud storage hay tai file CSV thuc.
     """
     test_db = str(tmp_path / "test_mlflow.db")
-    mlflow.set_tracking_uri(f"sqlite:///{test_db}")
+    os.environ["MLFLOW_TRACKING_URI"] = f"sqlite:///{test_db}"
+    os.environ["MLFLOW_EXPERIMENT_NAME"] = f"test_{tmp_path.name}"
 
     rng = np.random.default_rng(0)
     n = 200
