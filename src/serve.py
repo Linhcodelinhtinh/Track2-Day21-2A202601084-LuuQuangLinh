@@ -6,7 +6,7 @@ import os
 
 app = FastAPI()
 
-ARTIFACT_BUCKET = os.environ["ARTIFACT_BUCKET"]
+ARTIFACT_BUCKET = os.environ.get("ARTIFACT_BUCKET", "")
 MODEL_KEY = "artifacts/current/model.joblib"
 MODEL_PATH = os.path.expanduser("~/models/model.joblib")
 
@@ -16,14 +16,26 @@ def download_model():
     Tai file model.joblib tu AWS S3 ve may khi server khoi dong.
     Su dung AWS credentials (bien moi truong AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY hoac ~/.aws/credentials).
     """
-    os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
-    s3 = boto3.client("s3")
-    s3.download_file(ARTIFACT_BUCKET, MODEL_KEY, MODEL_PATH)
-    print("Model da duoc tai xuong tu AWS S3.")
+    if not ARTIFACT_BUCKET:
+        print("ARTIFACT_BUCKET variable not set. Skipping S3 download.")
+        return
+    try:
+        os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+        s3 = boto3.client("s3")
+        s3.download_file(ARTIFACT_BUCKET, MODEL_KEY, MODEL_PATH)
+        print("Model da duoc tai xuong tu AWS S3.")
+    except Exception as e:
+        print(f"Could not download model from S3 ({e}). Fallback to local model.")
 
 
 download_model()
-model = joblib.load(MODEL_PATH)
+
+if os.path.exists(MODEL_PATH):
+    model = joblib.load(MODEL_PATH)
+elif os.path.exists("models/model.joblib"):
+    model = joblib.load("models/model.joblib")
+else:
+    model = None
 
 
 class ScoreRequest(BaseModel):
